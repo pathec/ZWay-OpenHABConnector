@@ -1,0 +1,12 @@
+{
+	"m_title":"OpenHAB Konnektor",
+	"m_descr":"Dieses Modul registriert openHAB Geräte, die bei Statusänderungen der zugehörigen Z-Way Geräte benachrichtigt werden. Die Konfiguration übernimmt das zugehörige openHAB Binding und muss nicht manuell durchgeführt werden.",
+	"l_common_options":"Allgemeine Optionen",
+	"l_openhab_servers":"OpenHAB Server",
+	"l_openhab_alias":"Bezeichnung für den openHAB Server",
+	"l_openhab_alias_help":"Diese Information wird benötigt, um mehrere openHAB Server zu verwalten.",
+	"l_ip_address":"OpenHAB IP Adresse",
+	"l_ip_address_help":"Die IP Adresse, unter der der openHAB Server erreichbar ist.",
+	"l_port":"OpenHAB Port",
+	"l_port_help":"Standard: 8080"
+}

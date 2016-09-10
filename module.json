@@ -1,0 +1,84 @@
+{
+	"singleton" : true,
+	"dependencies": [],
+	"category": "support_external_dev",
+	"author": "Patrick Hecker",
+	"homepage": "sensor.fh-zwickau.de",
+	"icon": "icon.png",
+    "moduleName": "OpenHABConnector",
+	"repository" : {
+	   "source" : "https://github.com/pathec/ZWay-OpenHABConnector",
+	   "type" : "git"
+	},
+	"version": "0.1.0",
+	"maturity": "beta",
+	"defaults" : {
+		"title" : "__m_title__",
+		"description" : "__m_descr__"
+	},
+	"schema" : {
+		"type" : "object",
+		"properties" : {
+			"commonOptions": {
+				"type": "object",
+				"properties": {
+					"openHabServers": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"openHabAlias": {
+									"type": "text",
+									"required": true
+								},
+								"ipAddress": {
+									"type": "text",
+									"required": true
+								},
+								"port": {
+									"type": "integer",
+									"required": true
+								}
+							}
+						}
+					}
+
+				}
+			}
+		},
+		"required": false
+	},
+	"options": {
+		"fields": {
+			"commonOptions": {
+				"label": "__l_common_options__",
+				"fields": {
+					"openHabServers": {
+						"label": "__l_openhab_servers__",
+						"fields": {
+							"item": {
+								"fields": {
+									"openHabAlias": {
+										"label": "__l_openhab_alias__",
+										"type": "text",
+										"helper": "__l_openhab_alias_help__"
+									},
+									"ipAddress": {
+										"label": "__l_ip_address__",
+										"type": "text",
+										"helper": "__l_ip_address_help__"
+									},
+									"port": {
+										"label": "__l_port__",
+										"type": "integer",
+										"helper": "__l_port_help__"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
