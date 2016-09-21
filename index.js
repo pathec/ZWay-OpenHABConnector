@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * @module OpenHABConnector
  */
 
 /**
  * @class OpenHABConnector
- * @version 0.1.0
+ * @version 0.1.1
  * @author Patrick Hecker <pah111kg@fh-zwickau.de>
  *
  */
@@ -314,15 +314,24 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
     var vDev = self.controller.devices.get(openHabItem.vDevName);
 
     if (vDev) {
-        var level = vDev.get("metrics:level");
+        var level = "";
         var deviceType = vDev.get("deviceType");
+        var probeType = vDev.get("probeType");
 
         // TODO universal convert function to transform Z-Way level to openHAB state type
         if(deviceType == "switchBinary" || deviceType == "sensorBinary" || deviceType == "switchControl") {
-            if(level == "on") {
+            if(vDev.get("metrics:level") == "on") {
                 level = "ON";
             } else {
-                level = "OFF"
+                level = "OFF";
+            }
+        }
+
+        if(deviceType == "sensorBinary" && probeType == "door-window") {
+            if(vDev.get("metrics:level") == "on") {
+                level = "OPEN";
+            } else {
+                level = "CLOSED";
             }
         }
 
