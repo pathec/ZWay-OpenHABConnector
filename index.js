@@ -21,7 +21,7 @@
 
 /**
  * @class OpenHABConnector
- * @version 0.1.1
+ * @version 0.1.2
  * @author Patrick Hecker <pah111kg@fh-zwickau.de>
  *
  */
@@ -314,7 +314,7 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
     var vDev = self.controller.devices.get(openHabItem.vDevName);
 
     if (vDev) {
-        var level = "";
+        var level = vDev.get("metrics:level"); // init with device level, only the value have to convert the value will modified below
         var deviceType = vDev.get("deviceType");
         var probeType = vDev.get("probeType");
 
@@ -332,6 +332,16 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
                 level = "OPEN";
             } else {
                 level = "CLOSED";
+            }
+        }
+
+        if(deviceType == "switchRGBW") {
+            if(vDev.get("metrics:color")) {
+                var rgbColor = vDev.get("metrics:color");
+                if(rgbColor) {
+                    var hsbColor = self.convertRGBtoHSB(rgbColor);
+                    level = hsbColor.hue + "," + hsbColor.saturation + "," + hsbColor.brightness;
+                }
             }
         }
 
@@ -380,6 +390,50 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
         }
 
     }
+}
+
+/**
+ * Converts rgb color to hsb color.
+ * Source: The original implementation comes from openHAB (org.eclipse.smarthome.core.library.types.HSBType.fromRGB())
+ * @param {Object} Color - rgb {r: ..., g: ..., b: ...}
+ * @return {Object} Color - hsb {hue: ..., saturation: ..., brightness: ...}
+ */
+OpenHABConnector.prototype.convertRGBtoHSB = function (rgb) {
+    var tmpHue, tmpSaturation, tmpBrightness;
+    var max = (rgb.r > rgb.g) ? rgb.r : rgb.g;
+    if (rgb.b > max) {
+        max = rgb.b;
+    }
+    var min = (rgb.r < rgb.g) ? rgb.r : rgb.g;
+    if (rgb.b < min) {
+        min = rgb.b;
+    }
+    tmpBrightness = max / 2.55;
+    tmpSaturation = (max != 0 ? (max - min) / max : 0) * 100;
+    if (tmpSaturation == 0) {
+        tmpHue = 0;
+    } else {
+        var red = (max - rgb.r) / (max - min);
+        var green = (max - rgb.g) / (max - min);
+        var blue = (max - rgb.b) / (max - min);
+        if (rgb.r == max) {
+            tmpHue = blue - green;
+        } else if (rgb.g == max) {
+            tmpHue = 2.0 + red - blue;
+        } else {
+            tmpHue = 4.0 + green - red;
+        }
+        tmpHue = tmpHue / 6.0 * 360;
+        if (tmpHue < 0) {
+            tmpHue = tmpHue + 360.0;
+        }
+    }
+
+    return {
+        hue: tmpHue,
+        saturation: tmpSaturation,
+        brightness: tmpBrightness
+    };
 }
 
 /**
