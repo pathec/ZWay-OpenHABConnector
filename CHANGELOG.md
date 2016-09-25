@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.3] - 2016-09-24
+### Fixed
+- *core.start* event unsubscribing during module stop (the callback function never removed only added until the limit was reached)
+    - fix error: *warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.* (this resulted in an *Internal server error* with HTTP status 500)
+- disable removing event listener at module start (this resulted in a warning *Removing event listener failed - callback function not found!*)
+
 ## [0.1.2] - 2016-09-22
 ### Added
 - add mapping for *switch rgb* from *rgb* to *hsb* color

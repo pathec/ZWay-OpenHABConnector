@@ -21,7 +21,7 @@
 
 /**
  * @class OpenHABConnector
- * @version 0.1.2
+ * @version 0.1.3
  * @author Patrick Hecker <pah111kg@fh-zwickau.de>
  *
  */
@@ -59,6 +59,7 @@ function OpenHABConnector (id, controller) {
 
     // stores object references of callback funcitons for removing event listener
     self.callbackFunctions = [];
+    self.refreshListenerCallbackFunction = {};
 }
 
 inherits(OpenHABConnector, AutomationModule);
@@ -187,9 +188,12 @@ OpenHABConnector.prototype.init = function (config) {
         self.openHabServers = self.config.commonOptions.openHabServers;
     }
 
-    self.controller.on("core.start", function() {
-        self.refreshListener(true);
-    });
+    // wrap method with a function
+    self.refreshListenerCallbackFunction = function() {
+    	self.refreshListener(true);
+    }
+
+    self.controller.on("core.start", self.refreshListenerCallbackFunction);
 
     // save virtual device obejct for later use (outside the scope of this function)
     self.vDev = vDev;
@@ -208,15 +212,17 @@ OpenHABConnector.prototype.refreshListener = function(coreStart) {
     var openHabItemData = self.getAllOpenHabItem();
 
     // first remove all existing listener (when configuration changed and core.start not emitted)
-    var index = 0;
-    openHabItemData.forEach(function(it) {
-        console.log("Removing event listener " + index + ': ' + self.toStringOpenHabItem(it));
+    if(coreStart == false) {
+        var index = 0;
+        openHabItemData.forEach(function(it) {
+            console.log("Removing event listener " + index + ': ' + self.toStringOpenHabItem(it));
 
-        // remove event listener and callback function for the virtual device
-        self.removeEventListener(it);
+            // remove event listener and callback function for the virtual device
+            self.removeEventListener(it);
 
-        index++;
-    });
+            index++;
+        });
+    }
 
     // add all event listener
     index = 0; // reset index
@@ -259,7 +265,8 @@ OpenHABConnector.prototype.refreshListener = function(coreStart) {
 OpenHABConnector.prototype.stop = function () {
     var self = this;
 
-    self.controller.off("core.start", function() {});
+    self.controller.off("core.start", self.refreshListenerCallbackFunction);
+    self.refreshListenerCallbackFunction = {};
 
     // load all registered openHAB items
     var openHabItemData = self.getAllOpenHabItem();
