@@ -60,6 +60,10 @@ function OpenHABConnector (id, controller) {
     // stores object references of callback functions for removing event listener
     self.callbackFunctions = [];
     self.refreshListenerCallbackFunction = {};
+    self.initWebSocketCallbackFunction = {};
+
+    // WebSocket callbacks
+    self.websocketDeviceStateCallbackFunction = {};
 }
 
 inherits(OpenHABConnector, AutomationModule);
@@ -154,6 +158,10 @@ OpenHABConnector.prototype.init = function (config) {
                     'state': {
                         'openHABItem': openHABItem
                     },
+                    'websocketOptions': {
+                        'webSocketDeviceState': self.websocketDeviceState,
+                        'webSocketDeviceTitle': self.websocketDeviceTitle
+                    },
                     'callbackFunctions': self.callbackFunctions
                 }
 			} else if(command === "clearAll") {
@@ -187,19 +195,47 @@ OpenHABConnector.prototype.init = function (config) {
     if(self.config.commonOptions.openHabServers) {
         self.openHabServers = self.config.commonOptions.openHabServers;
     }
+    if(self.config.websocketOptionsContainer.websocketOptions) {
+        self.websocketOptions = self.config.websocketOptionsContainer.websocketOptions;
+        self.websocketDeviceState = _.contains(self.websocketOptions, "deviceStateUpdates");
+        self.websocketDeviceTitle = _.contains(self.websocketOptions, "deviceTitleUpdates");
+    }
 
     // wrap method with a function
     self.refreshListenerCallbackFunction = function() {
     	self.refreshListener(true);
     }
-
     self.controller.on("core.start", self.refreshListenerCallbackFunction);
+
+    // wrap method with a function
+    self.initWebSocketCallbackFunction = function() {
+        self.initWebSocket(true);
+    }
+    self.controller.on("core.start", self.initWebSocketCallbackFunction);
+
 
     // save virtual device obejct for later use (outside the scope of this function)
     self.vDev = vDev;
 
     self.refreshInfo();
 };
+
+/**
+ * This function is initialize WebSocket function
+ * @param {String} coreStart - context in which the function is invoked
+ */
+OpenHABConnector.prototype.initWebSocket = function(coreStart) {
+    var self = this;
+
+    if(self.websocketDeviceState == true) {
+        // wrap method with a function
+        self.websocketDeviceStateCallbackFunction = function(device) {
+            console.log("connector.openhab.devices.level_update");
+            ws.push("connector.openhab.devices.level_update", JSON.stringify(device.toJSON()));
+        }
+        self.controller.devices.on('change:metrics:level', self.websocketDeviceStateCallbackFunction);
+    }
+}
 
 /**
  * This function is initialize event listener for devices
@@ -267,6 +303,12 @@ OpenHABConnector.prototype.stop = function () {
 
     self.controller.off("core.start", self.refreshListenerCallbackFunction);
     self.refreshListenerCallbackFunction = {};
+
+    self.controller.off("core.start", self.initWebSocketCallbackFunction);
+    self.initWebSocketCallbackFunction = {};
+
+    self.controller.devices.off("change:metrics:level", self.websocketDeviceStateCallbackFunction);
+    self.websocketDeviceStateCallbackFunction = {};
 
     // load all registered openHAB items
     var openHabItemData = self.getAllOpenHabItem();

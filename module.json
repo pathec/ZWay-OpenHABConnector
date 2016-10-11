@@ -42,7 +42,16 @@
 							}
 						}
 					}
-
+				}
+			},
+			"websocketOptionsContainer": {
+				"type": "object",
+				"properties": {
+					"websocketOptions": {
+						"type": "array",
+						"enum": ["deviceStateUpdates", "deviceTitleUpdates"],
+						"default": ["deviceStateUpdates", "deviceTitleUpdates"]
+					}
 				}
 			}
 		},
@@ -76,6 +85,16 @@
 								}
 							}
 						}
+					}
+				}
+			},
+			"websocketOptionsContainer": {
+				"label": "__l_websocket_options__",
+				"fields": {
+					"websocketOptions": {
+						"label": "__l_websocket_options_desc__",
+						"type": "checkbox",
+						"optionLabels": ["__l_websocket_options_device_state_updates__", "__l_websocket_options_device_title_updates__"]
 					}
 				}
 			}

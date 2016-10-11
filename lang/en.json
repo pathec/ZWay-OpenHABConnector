@@ -8,5 +8,9 @@
 	"l_ip_address":"Enter the openHAB server ip address",
 	"l_ip_address_help":"The address that is used for notifications after state changes",
 	"l_port":"Enter openHAB server port",
-	"l_port_help":"Default: 8080"
+	"l_port_help":"Default: 8080",
+	"l_websocket_options":"WebSocket options",
+	"l_websocket_options_desc":"Activate the options by selecting them.",
+	"l_websocket_options_device_state_updates":"Send device state updates",
+	"l_websocket_options_device_title_updates":"Send device title updates"
 }

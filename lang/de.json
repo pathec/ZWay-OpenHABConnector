@@ -8,5 +8,9 @@
 	"l_ip_address":"OpenHAB IP Adresse",
 	"l_ip_address_help":"Die IP Adresse, unter der der openHAB Server erreichbar ist.",
 	"l_port":"OpenHAB Port",
-	"l_port_help":"Standard: 8080"
+	"l_port_help":"Standard: 8080",
+	"l_websocket_options":"WebSocket Optionen",
+	"l_websocket_options_desc":"Aktiviere die Optionen indem diese ausgewählt werden.",
+	"l_websocket_options_device_state_updates":"Änderungen des Gerätezustands senden",
+	"l_websocket_options_device_title_updates":"Änderungen der Gerätebezeichnung senden"
 }
