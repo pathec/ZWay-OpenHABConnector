@@ -307,8 +307,10 @@ OpenHABConnector.prototype.stop = function () {
     self.controller.off("core.start", self.initWebSocketCallbackFunction);
     self.initWebSocketCallbackFunction = {};
 
-    self.controller.devices.off("change:metrics:level", self.websocketDeviceStateCallbackFunction);
-    self.websocketDeviceStateCallbackFunction = {};
+    if(typeof self.websocketDeviceStateCallbackFunction === "function") {
+        self.controller.devices.off("change:metrics:level", self.websocketDeviceStateCallbackFunction);
+        self.websocketDeviceStateCallbackFunction = {};
+    }
 
     // load all registered openHAB items
     var openHabItemData = self.getAllOpenHabItem();
