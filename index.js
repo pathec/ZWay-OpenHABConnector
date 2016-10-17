@@ -57,7 +57,7 @@ function OpenHABConnector (id, controller) {
         + '}'
         + '</script>';
 
-    // stores object references of callback funcitons for removing event listener
+    // stores object references of callback functions for removing event listener
     self.callbackFunctions = [];
     self.refreshListenerCallbackFunction = {};
 }
@@ -112,7 +112,7 @@ OpenHABConnector.prototype.init = function (config) {
                         return { 'code': 0, 'message': 'Register:openHAB item allready exist' }
                     }
                 } else {
-                    return { 'code': 2, 'message': 'OK - Error - missing parameter' }
+                    return { 'code': 2, 'message': 'Error - missing parameter' }
                 }
 			} else if(command === "removeOpenHabItem") {
                 if(args.openHabAlias && args.openHabItemName) {
@@ -132,7 +132,7 @@ OpenHABConnector.prototype.init = function (config) {
                         return { 'code': 0, 'message': 'Remove:openHAB item not found' }
                     }
                 } else {
-                    return { 'code': 2, 'message': 'OK - Error - missing parameter' }
+                    return { 'code': 2, 'message': 'Error - missing parameter' }
                 }
 			} else if(command === "notifyAll") {
                 var openHabItemData = self.getAllOpenHabItem();
