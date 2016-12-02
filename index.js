@@ -389,7 +389,10 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
 
                     self.updateOpenHabItem(openHabItem);
 
-                    self.controller.addNotification("warning", "Observer not notified - openHAB item: " + openHabItem.openHabItemName + "(HTTP Status: " + res.status + ")", "module", "OpenHABConnector");
+                    var status = "HTTP Status: " + res.status + " - " + res.statusText + " - " +  res.data.error.message;
+
+                    self.controller.addNotification("warning", "Observer not notified - openHAB item: " + openHabItem.openHabItemName + " (" + status + "). "
+                        + "Failed request: http://" + server.ipAddress + ":" + server.port + "/rest/items/" + openHabItem.openHabItemName + "/state with body: " + String(level), "module", "OpenHABConnector");
                 }
             });
         } else {
