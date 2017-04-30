@@ -21,7 +21,7 @@
 
 /**
  * @class OpenHABConnector
- * @version 0.1.3
+ * @version 0.1.5
  * @author Patrick Hecker <pah111kg@fh-zwickau.de>
  *
  */
@@ -349,6 +349,16 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
                     var hsbColor = self.convertRGBtoHSB(rgbColor);
                     level = hsbColor.hue + "," + hsbColor.saturation + "," + hsbColor.brightness;
                 }
+            }
+        }
+
+        // doorlock device type has the state (level) open or close, but in
+        // openHAB doorlock is represented by a switch with on/off.
+        if(deviceType == "doorlock") {
+            if(vDev.get("metrics:level") == "open") {
+                level = "ON";
+            } else {
+                level = "OFF";
             }
         }
 
