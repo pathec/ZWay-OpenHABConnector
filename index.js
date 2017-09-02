@@ -326,16 +326,16 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
         var probeType = vDev.get("probeType");
 
         // TODO universal convert function to transform Z-Way level to openHAB state type
-        if(deviceType == "switchBinary" || deviceType == "sensorBinary" || deviceType == "switchControl") {
-            if(vDev.get("metrics:level") == "on") {
-                level = "ON";
-            } else {
-                level = "OFF";
-            }
+
+        // replace lower case by upper case for openHAB
+        if(vDev.get("metrics:level") == "on") {
+            level = "ON";
+        } else {
+            level = "OFF";
         }
 
         if(deviceType == "sensorBinary" && probeType == "door-window") {
-            if(vDev.get("metrics:level") == "on") {
+            if(vDev.get("metrics:level") == "ON") {
                 level = "OPEN";
             } else {
                 level = "CLOSED";
