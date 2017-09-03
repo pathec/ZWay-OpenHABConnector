@@ -10,7 +10,7 @@
 	   "source" : "https://github.com/pathec/ZWay-OpenHABConnector",
 	   "type" : "git"
 	},
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"maturity": "beta",
 	"defaults" : {
 		"title" : "__m_title__",
