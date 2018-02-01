@@ -21,8 +21,8 @@
 
 /**
  * @class OpenHABConnector
- * @version 0.1.5
- * @author Patrick Hecker <pah111kg@fh-zwickau.de>
+ * @version 0.1.8
+ * @author Patrick Hecker <kontakt@patrick-hecker.de>
  *
  */
 function OpenHABConnector (id, controller) {
@@ -367,10 +367,15 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
         var server = _.findWhere(self.openHabServers, {openHabAlias: openHabItem.openHabAlias});
 
         if(server) {
+            // Default protocol
+            if (server.protocol == undefined || (server.protocol != "http" && server.protocol != "https")) {
+                server.protocol = "http"
+            }
+
             console.log("OpenHAB server found");
-            console.log('http://' + server.ipAddress + ':' + server.port + '/rest/items/' + openHabItem.openHabItemName + '/state');
+            console.log(server.protocol + '://' + server.ipAddress + ':' + server.port + '/rest/items/' + openHabItem.openHabItemName + '/state');
             http.request({
-                url: 'http://' + server.ipAddress + ':' + server.port + '/rest/items/' + openHabItem.openHabItemName + '/state',
+                url: server.protocol + '://' + server.ipAddress + ':' + server.port + '/rest/items/' + openHabItem.openHabItemName + '/state',
                 method: 'PUT',
                 data: String(level),
                 async: true,
@@ -400,10 +405,10 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
 
                     self.updateOpenHabItem(openHabItem);
 
-                    var status = "HTTP Status: " + res.status + " - " + res.statusText + " - " +  res.data.error.message;
+                    var status = "HTTP Status: " + res.status + " - " + res.statusText + " - " +  (res.data != undefined ? res.data.error.message : " Not message available");
 
                     self.controller.addNotification("warning", "Observer not notified - openHAB item: " + openHabItem.openHabItemName + " (" + status + "). "
-                        + "Failed request: http://" + server.ipAddress + ":" + server.port + "/rest/items/" + openHabItem.openHabItemName + "/state with body: " + String(level), "module", "OpenHABConnector");
+                        + "Failed request: " + server.protocol + "://" + server.ipAddress + ":" + server.port + "/rest/items/" + openHabItem.openHabItemName + "/state with body: " + String(level), "module", "OpenHABConnector");
                 }
             });
         } else {

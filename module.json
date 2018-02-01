@@ -10,7 +10,7 @@
 	   "source" : "https://github.com/pathec/ZWay-OpenHABConnector",
 	   "type" : "git"
 	},
-	"version": "0.1.7",
+	"version": "0.1.8",
 	"maturity": "beta",
 	"defaults" : {
 		"title" : "__m_title__",
@@ -30,6 +30,10 @@
 								"openHabAlias": {
 									"type": "text",
 									"required": true
+								},
+								"protocol": {
+									"type": "text",
+									"required": false
 								},
 								"ipAddress": {
 									"type": "text",
@@ -62,6 +66,11 @@
 										"label": "__l_openhab_alias__",
 										"type": "text",
 										"helper": "__l_openhab_alias_help__"
+									},
+									"protocol": {
+										"label": "__l_protocol__",
+										"type": "text",
+										"helper": "__l_protocol_help__"
 									},
 									"ipAddress": {
 										"label": "__l_ip_address__",
