@@ -368,6 +368,9 @@ OpenHABConnector.prototype.notifyOpenHabItem = function (openHabItem) {
 
         if(server) {
             // Default protocol
+            if(server.protocol != undefined) {
+                server.protocol = server.protocol.toLowerCase()
+            }
             if (server.protocol == undefined || (server.protocol != "http" && server.protocol != "https")) {
                 server.protocol = "http"
             }
